@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html th:data-bs-theme="${theme}" lang="ru" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Расписание</title>
+</head>
+
+<head th:insert="blocks/head :: head"></head>
+
+<body class="d-flex flex-column min-vh-100"
+      style="background: url(&quot;/img/bg.jpg&quot;) no-repeat fixed;background-size: cover;">
+<div th:insert="blocks/nav :: nav"></div>
+
+<main class="page catalog-page mt-5">
+    <section class="clean-block clean-catalog dark">
+        <div class="container">
+            <div class="block-heading text-center mb-5">
+                <h2 class="text-primary">Расписание</h2>
+            </div>
+
+            <form th:if="${role != 'USER'}" action="/schedules/search" method="get" class="row mb-5">
+                <div class="col"></div>
+                <div class="col-6">
+                    <select name="classroomId" required class="form-select">
+                        <option th:each="i : ${classrooms}" th:value="${i.id}" th:label="${i.name}"
+                                th:selected="${i.id == classroomId}"></option>
+                    </select>
+                </div>
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-primary">Посмотреть</button>
+                </div>
+                <div class="col"></div>
+            </form>
+
+            <div th:if="${classroom}" class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-6">
+                            <div th:each="i : ${classroom.schedulesPart1}">
+                                <p class="fs-4 mb-2" th:text="${i.key.name}"></p>
+                                <p class="fs-5 mb-1" th:each="v : ${i.value}"
+                                   th:text="${v.position + ' | ' + v.subject.name}"></p>
+                                <hr>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div th:each="i : ${classroom.schedulesPart2}">
+                                <p class="fs-4 mb-2" th:text="${i.key.name}"></p>
+                                <p class="fs-5 mb-1" th:each="v : ${i.value}"
+                                   th:text="${v.position + ' | ' + v.subject.name}"></p>
+                                <hr>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+</main>
+
+<script src="/js/bootstrap.min.js"></script>
+
+
+</body>
+
+</html>

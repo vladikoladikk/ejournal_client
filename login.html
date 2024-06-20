@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html th:data-bs-theme="${theme}" lang="ru" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Авторизация</title>
+</head>
+
+<head th:insert="blocks/head :: head"></head>
+
+<body class="d-flex flex-column min-vh-100" style="background: url(&quot;/img/bg.jpg&quot;) no-repeat fixed;background-size: cover;">
+
+<div th:insert="blocks/nav :: nav"></div>
+
+<main class="page login-page mt-5">
+    <section class="clean-block clean-form dark">
+        <div class="container">
+            <div class="block-heading text-center mb-5">
+                <h2 class="text-primary">Авторизация</h2>
+            </div>
+
+            <div th:if="${param.error}" class="row">
+                <div class="col"></div>
+                <div class="col">
+                    <div class="alert alert-light text-center" role="alert">
+                        <strong>Некорректный ввод логина или пароля!</strong>
+                    </div>
+                </div>
+                <div class="col"></div>
+            </div>
+
+            <div class="row">
+                <div class="col"></div>
+                <div class="col">
+                    <form method="post" action="/login">
+                        <div class="mb-3">
+                            <input class="form-control" type="text" placeholder="Логин" required name="username">
+                        </div>
+                        <div class="mb-3">
+                            <input class="form-control" type="password" placeholder="Пароль" required name="password">
+                        </div>
+                        <button class="btn btn-primary w-100" type="submit">Авторизация</button>
+                    </form>
+                </div>
+                <div class="col"></div>
+            </div>
+
+        </div>
+    </section>
+</main>
+
+<script src="/js/bootstrap.min.js"></script>
+
+
+
+</body>
+
+</html>

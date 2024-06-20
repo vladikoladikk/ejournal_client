@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html th:data-bs-theme="${theme}" lang="ru" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title th:text="${subject.name}"></title>
+</head>
+
+<head th:insert="blocks/head :: head"></head>
+
+<body class="d-flex flex-column min-vh-100"
+      style="background: url(&quot;/img/bg.jpg&quot;) no-repeat fixed;background-size: cover;">
+<div th:insert="blocks/nav :: nav"></div>
+
+<main class="page catalog-page mt-5">
+    <section class="clean-block clean-catalog dark">
+        <div class="container bg-light rounded shadow border p-2 mb-5">
+            <div class="block-heading text-center mb-5">
+                <h2 class="text-primary" th:text="${subject.name}"></h2>
+            </div>
+
+            <div class="text-center mb-3">
+                <a href="/subjects" class="btn btn-secondary w-25">Назад</a>
+                <a onclick="generatePDF()" class="btn btn-warning w-25">PDF</a>
+            </div>
+
+            <div class="row mb-5">
+                <div class="col"></div>
+                <div class="col-7" id="generatePDF">
+                    <!--            <hr>-->
+                    <!--            <div id="drawLesson" style="height: 400px" class="shadow"></div>-->
+                    <div id="drawScoreType" style="height: 400px" class="shadow"></div>
+                </div>
+                <div class="col"></div>
+            </div>
+
+            <div th:if="${message}" class="row">
+                <div class="col"></div>
+                <div class="col">
+                    <div class="alert alert-light text-center" role="alert">
+                        <strong th:text="${message}"></strong>
+                    </div>
+                </div>
+                <div class="col"></div>
+            </div>
+
+            <div th:if="${role == 'ADMIN'}">
+                <form th:action="${'/subjects/' + subjectId + '/edit'}" method="post" class="row">
+                    <div class="col">
+                        <input type="text" required class="form-control" name="name"
+                               placeholder="Наименование" th:value="${subject.name}">
+                    </div>
+                    <div class="col">
+                        <select name="teacherId" required class="form-select">
+                            <option th:each="i : ${teachers}" th:value="${i.id}" th:label="${i.fio}"
+                                    th:selected="${i.id == subject.teacher.id}"></option>
+                        </select>
+                    </div>
+                    <div class="col">
+                        <select name="classroomId" required class="form-select">
+                            <option th:each="i : ${classrooms}" th:value="${i.id}" th:label="${i.name}"
+                                    th:selected="${i.id == subject.classroom.id}"></option>
+                        </select>
+                    </div>
+                    <div class="col-auto">
+                        <button type="submit" class="btn btn-success">Обновить</button>
+                    </div>
+                    <div class="col-auto">
+                        <a th:action="${'/subjects/' + subjectId + '/delete'}" class="btn btn-danger">Удалить</a>
+                    </div>
+                </form>
+
+                <hr>
+
+                <p class="fs-3 text-center mb-2 text-primary">Расписание</p>
+
+                <form th:action="${'/subjects/' + subjectId + '/schedules/add'}"
+                      method="post" class="row">
+                    <div class="col">
+                        <select name="dayOfWeek" required class="form-select">
+                            <option th:each="d : ${dayOfWeeks}" th:value="${d}" th:label="${d.name}"></option>
+                        </select>
+                    </div>
+                    <div class="col">
+                        <input type="number" required class="form-control" name="position"
+                               placeholder="Порядковый номер урока" min="1" step="1" max="6">
+                    </div>
+                    <div class="col-auto">
+                        <button type="submit" class="btn btn-primary">Добавить</button>
+                    </div>
+                </form>
+
+                <hr>
+
+                <form th:each="i : ${subject.schedules}" method="post" class="row mb-2"
+                      th:action="${'/subjects/' + subjectId + '/schedules/' + i.id + '/edit'}">
+                    <div class="col">
+                        <select name="dayOfWeek" required class="form-select">
+                            <option th:each="d : ${dayOfWeeks}" th:value="${d}" th:label="${d.name}"
+                                    th:selected="${d == i.dayOfWeek}"></option>
+                        </select>
+                    </div>
+                    <div class="col">
+                        <input type="number" required class="form-control" name="position" th:value="${i.position}"
+                               placeholder="Порядковый номер урока" min="1" step="1" max="6">
+                    </div>
+                    <div class="col-auto">
+                        <button type="submit" class="btn btn-success">Обновить</button>
+                    </div>
+                    <div class="col-auto">
+                        <a th:href="${'/subjects/' + subjectId + '/schedules/' + i.id + '/delete'}"
+                           class="btn btn-danger">Удалить</a>
+                    </div>
+                </form>
+
+                <hr>
+
+                <p class="fs-3 text-center mb-2 text-primary">Уроки</p>
+
+                <form th:action="${'/subjects/' + subjectId + '/lessons/add'}" method="post" class="row">
+                    <div class="col">
+                        <input type="date" required class="form-control" name="date">
+                    </div>
+                    <div class="col">
+                        <input type="number" required class="form-control" name="position"
+                               placeholder="Порядковый номер урока" min="1" step="1" max="6">
+                    </div>
+                    <div class="col-auto">
+                        <button type="submit" class="btn btn-primary">Добавить</button>
+                    </div>
+                </form>
+
+                <hr>
+
+                <form th:each="i : ${subject.lessons}" method="post" class="row mb-2"
+                      th:action="${'/subjects/' + subjectId + '/lessons/' + i.id + '/edit'}">
+                    <div class="col">
+                        <input type="date" required class="form-control" name="date" th:value="${i.date}">
+                    </div>
+                    <div class="col">
+                        <input type="number" required class="form-control" name="position" th:value="${i.position}"
+                               placeholder="Порядковый номер урока" min="1" step="1" max="6">
+                    </div>
+                    <div class="col-auto">
+                        <button type="submit" class="btn btn-success">Обновить</button>
+                    </div>
+                    <div class="col-auto">
+                        <a th:href="${'/subjects/' + subjectId + '/lessons/' + i.id + '/delete'}" type="submit"
+                           class="btn btn-danger">Удалить</a>
+                    </div>
+                </form>
+
+
+            </div>
+
+
+            <div th:if="${role != 'ADMIN'}">
+                <div class="row text-center">
+                    <div class="col">
+                        <p class="fs-4 m-0" th:text="${subject.teacher.role.name + ': ' + subject.teacher.fio}"></p>
+                    </div>
+                    <div class="col">
+                        <p class="fs-4 m-0" th:text="${'Класс: ' + subject.classroom.name}"></p>
+                    </div>
+                </div>
+
+                <hr>
+
+                <p class="fs-3 text-center mb-2 text-primary">Расписание</p>
+
+                <div class="row">
+                    <div class="col-6">
+                        <div th:each="i : ${subject.schedulesPart1}">
+                            <p class="fs-4 mb-2" th:text="${i.key.name}"></p>
+                            <p class="fs-5 mb-1" th:each="v : ${i.value}"
+                               th:text="${v.position + ' | ' + v.subject.name}"></p>
+                            <hr>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div th:each="i : ${subject.schedulesPart2}">
+                            <p class="fs-4 mb-2" th:text="${i.key.name}"></p>
+                            <p class="fs-5 mb-1" th:each="v : ${i.value}"
+                               th:text="${v.position + ' | ' + v.subject.name}"></p>
+                            <hr>
+                        </div>
+                    </div>
+                </div>
+
+                <hr>
+
+                <p class="fs-3 text-center mb-2 text-primary">Уроки</p>
+
+                <div class="row">
+                    <div th:each="i : ${subject.lessons}" class="col-4 mb-2">
+                        <div class="p-1 bg-gradient shadow rounded">
+                            <p class="fs-5 mb-2 text-center" th:text="${i.date + ' | ' + i.position}"></p>
+                            <div th:if="${role == 'USER'}">
+                                <p th:unless="${i.homework.isEmpty()}" class="fs-6 mb-1 text-center"
+                                   th:text="${'ДЗ: ' + i.homework}"></p>
+                                <p th:if="${i.checkScore(user.id)}" class="fs-6 mb-1 text-center"
+                                   th:text="${'Оценка: ' + i.checkScore(user.id).type.name}"></p>
+                            </div>
+                            <div th:if="${role == 'MANAGER'}">
+                                <a th:href="${'/subjects/' + subjectId + '/lessons/' + i.id}"
+                                   class="btn btn-info w-100">Подробнее</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="mt-5"></div>
+
+        </div>
+    </section>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"
+        integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script th:inline="javascript" type="text/javascript">
+    var lessonString = /*[[${lessonString}]]*/ [];
+    var lessonValues = /*[[${lessonValues}]]*/ [];
+    var scoreTypesString = /*[[${scoreTypesString}]]*/ [];
+    var scoreTypeValues = /*[[${scoreTypeValues}]]*/ [];
+
+    function generatePDF() {
+        html2pdf(document.getElementById('generatePDF'));
+    }
+
+</script>
+<script src="/js/stats.js"></script>
+
+<script src="/js/bootstrap.min.js"></script>
+
+</body>
+
+</html>

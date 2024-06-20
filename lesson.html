@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html th:data-bs-theme="${theme}" lang="ru" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title th:text="${lesson.date + ' | ' + lesson.position}"></title>
+</head>
+
+<head th:insert="blocks/head :: head"></head>
+
+<body class="d-flex flex-column min-vh-100" style="background: url(&quot;/img/bg.jpg&quot;) no-repeat fixed;background-size: cover;">
+<div th:insert="blocks/nav :: nav"></div>
+
+<main class="page catalog-page mt-5">
+    <section class="clean-block clean-catalog dark">
+        <div class="container">
+            <div class="block-heading text-center mb-5">
+                <h2 class="text-primary" th:text="${lesson.date + ' | ' + lesson.position}"></h2>
+            </div>
+
+            <div class="text-center mb-3">
+                <a th:href="${'/subjects/' + subjectId}" class="btn btn-secondary w-25">Назад</a>
+            </div>
+
+            <form th:action="${'/subjects/' + subjectId + '/lessons/' + lessonId + '/homework'}" method="post"
+                  class="row">
+                <div class="col">
+                    <input type="text" class="form-control" name="homework" placeholder="Домашнее задание"
+                           th:value="${lesson.homework}">
+                </div>
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-primary">Обновить</button>
+                </div>
+            </form>
+
+            <hr>
+
+            <div class="row">
+                <div th:each="i : ${lesson.subject.classroom.students}" class="col-4 mb-2">
+                    <div class="p-2 bg-gradient rounded shadow">
+                        <p class="mb-2 fs-4 text-center" th:text="${i.fio}"></p>
+                        <form th:action="${'/subjects/' + subjectId + '/lessons/' + lessonId + '/score/' + i.id}"
+                              method="post" class="row">
+                            <div class="col">
+                                <select name="type" required class="form-select">
+                                    <option th:value="${null}">Выберите</option>
+                                    <option th:each="t : ${scoreTypes}" th:value="${t}" th:label="${t.name}" th:selected="${lesson.checkScoreType(t, i.id)}"></option>
+                                </select>
+                            </div>
+                            <div class="col-auto">
+                                <button type="submit" class="btn btn-success">Обновить</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="mt-5"></div>
+
+        </div>
+    </section>
+</main>
+
+<script src="/js/bootstrap.min.js"></script>
+
+
+</body>
+
+</html>

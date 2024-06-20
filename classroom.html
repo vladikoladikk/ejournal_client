@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html th:data-bs-theme="${theme}" lang="ru" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title th:text="${classroom.name}"></title>
+</head>
+
+<head th:insert="blocks/head :: head"></head>
+
+<body class="d-flex flex-column min-vh-100" style="background: url(&quot;/img/bg.jpg&quot;) no-repeat fixed;background-size: cover;">
+<div th:insert="blocks/nav :: nav"></div>
+
+<main class="page catalog-page mt-5">
+    <section class="clean-block clean-catalog dark">
+        <div class="container">
+            <div class="block-heading text-center mb-5">
+                <h2 class="text-primary" th:text="${classroom.name}"></h2>
+            </div>
+
+            <div class="text-center mb-3">
+                <a href="/classrooms" class="btn btn-secondary w-25">Назад</a>
+            </div>
+
+            <form th:action="${'/classrooms/' + classroom.id + '/students/add'}" method="post" class="row">
+                <div class="col">
+                    <select name="studentId" required class="form-select">
+                        <option th:each="s : ${students}" th:if="${s.classroom == null}" th:value="${s.id}"
+                                th:label="${s.fio}"></option>
+                    </select>
+                </div>
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-primary">Добавить</button>
+                </div>
+            </form>
+            <hr>
+            <div th:each="i : ${classroom.students}" class="row mb-2">
+                <div class="col">
+                    <input type="text" disabled class="form-control" th:value="${i.fio}">
+                </div>
+                <div class="col-auto">
+                    <a th:href="${'/classrooms/' + classroom.id + '/students/' + i.id + '/delete'}" class="btn btn-warning">Убрать</a>
+                </div>
+            </div>
+
+        </div>
+    </section>
+</main>
+
+<script src="/js/bootstrap.min.js"></script>
+
+
+</body>
+
+</html>

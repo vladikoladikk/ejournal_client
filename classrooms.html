@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html th:data-bs-theme="${theme}" lang="ru" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Школьные классы</title>
+</head>
+
+<head th:insert="blocks/head :: head"></head>
+
+<body class="d-flex flex-column min-vh-100"
+      style="background: url(&quot;/img/bg.jpg&quot;) no-repeat fixed;background-size: cover;">
+<div th:insert="blocks/nav :: nav"></div>
+<main class="page catalog-page mt-5">
+    <section class="clean-block clean-catalog dark">
+        <div class="container">
+            <div class="block-heading text-center mb-5">
+                <h2 class="text-primary">Школьные классы</h2>
+            </div>
+
+            <form action="/classrooms/add" method="post" class="row">
+                <div class="col"></div>
+                <div class="col">
+                    <input type="text" required class="form-control" name="name" placeholder="Наименование класса">
+                </div>
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-primary">Добавить</button>
+                </div>
+                <div class="col"></div>
+            </form>
+            <hr>
+            <div th:each="i : ${classrooms}" class="mb-2">
+                <div class="card">
+                    <div class="card-body p-2">
+                        <form th:action="${'/classrooms/' + i.id + '/edit'}" method="post"
+                              class="row">
+                            <div class="col">
+                                <input type="text" required class="form-control" name="name" th:value="${i.name}"
+                                       placeholder="Наименование класса">
+                            </div>
+                            <div class="col-auto">
+                                <button type="submit" class="btn btn-success">Обновить</button>
+                            </div>
+                            <div class="col-auto">
+                                <a th:href="${'/classrooms/' + i.id + '/delete'}" class="btn btn-danger">Удалить</a>
+                            </div>
+                            <div class="col-auto">
+                                <a th:href="${'/classrooms/' + i.id}" class="btn btn-info">Ученики</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+</main>
+
+<script src="/js/bootstrap.min.js"></script>
+
+
+</body>
+
+</html>

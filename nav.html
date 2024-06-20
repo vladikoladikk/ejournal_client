@@ -1,0 +1,26 @@
+<nav th:fragment="nav" class="navbar navbar-expand-lg bg-success shadow" data-bs-theme="dark">
+    <div class="container">
+        <a class="navbar-brand" href="#">Дневник</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01"
+                aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse fs-6" id="navbarColor01">
+            <ul class="navbar-nav me-auto ms-auto">
+                <li th:if="${role == 'ADMIN'}" class="nav-item"><a class="nav-link text-white" href="/users">Пользователи</a></li>
+                <li th:if="${role == 'ADMIN'}" class="nav-item"><a class="nav-link text-white" href="/classrooms">Школьные классы</a></li>
+                <li th:if="${role == 'ADMIN'}" class="nav-item"><a class="nav-link text-white" href="/reg">Добавить пользователя</a></li>
+
+                <li th:if="${role != 'NOT'}" class="nav-item"><a class="nav-link text-white" href="/subjects">Занятия</a></li>
+                <li th:if="${role != 'NOT'}" class="nav-item"><a class="nav-link text-white" href="/schedules">Расписание</a></li>
+
+            </ul>
+            <ul class="navbar-nav">
+                <li th:if="${role != 'NOT'}" class="nav-item"><a class="nav-link text-white" href="/profile">Профиль</a></li>
+                <li th:if="${role == 'NOT'}" class="nav-item"><a class="nav-link text-white" href="/login">Авторизация</a></li>
+                <li th:if="${role != 'NOT'}" class="nav-item"><a class="nav-link text-white" href="/logout">Выход</a></li>
+            </ul>
+
+        </div>
+    </div>
+</nav>
